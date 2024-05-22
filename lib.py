@@ -29,6 +29,10 @@ def get_current_risk_free_rate():
 
     # Attempt to fetch today's data
     data = yf.download(ticker, start=yesterday, end=today)
+    if data.empty:
+        raise ValueError(
+            f"Ticker Symbol {ticker} is not valid or date ranges are invalid"
+        )
 
     # If data is still empty, raise an error
     if data.empty:
@@ -50,7 +54,12 @@ def get_adj_close_plot(ticker, start_date, end_date):
     # end_date = datetime.strptime(end_date)
 
     # get the data
+
     data = get_data(ticker, start_date, end_date)["Adj Close"]
+    if data.empty:
+        raise ValueError(
+            f"Ticker Symbol {ticker} is not valid or date ranges are invalid"
+        )
 
     # display
     plt.figure(figsize=(20, 10))
@@ -73,7 +82,12 @@ def get_monte_carlo_plot(ticker, start_date, end_date, trading_days=5, iteration
     iterations = int(iterations)
 
     # get the data
-    data = get_data(ticker, start_date, end_date)["Adj Close"]
+    try:
+        data = get_data(ticker, start_date, end_date)["Adj Close"]
+        data.iloc[-1]
+    except Exception as e:
+        breakpoint()
+        print(e)
 
     # Compute the logarithmic returns
     log_returns = np.log(1 + data.pct_change())
