@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stock Tools</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='styles/styles.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Stock tools - Monte Carlo Simulation</h1>
+    <form action="/" method="POST">
+      <label for="ticker">Stock Ticker Symbol:</label>
+      <input type="text" id="ticker" name="ticker" value="T" required />
+      <br /><br />
+
+      <label for="start_date">Start Date:</label>
+      <input
+        type="date"
+        id="start_date"
+        name="start_date"
+        value="{{last_year}}"
+        required
+      />
+      <br /><br />
+
+      <label for="end_date">End Date:</label>
+      <input
+        type="date"
+        id="end_date"
+        name="end_date"
+        value="{{today}}"
+        required
+      /><br /><br />
+      <label for="trading_days"># of trading days:</label>
+      <input
+        type="number"
+        id="trading_days"
+        name="trading_days"
+        value="{{5}}"
+      /><br /><br />
+      <label for="iterations"># of iterations:</label>
+      <input
+        type="number"
+        id="iterations"
+        name="iterations"
+        value="{{100}}"
+      /><br /><br />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
