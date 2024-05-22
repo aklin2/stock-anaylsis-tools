@@ -41,15 +41,20 @@ def monte_carlo():
     trading_days = request.args.get("trading_days")
 
     # Generate plot
-    adj_close_img = get_adj_close_plot(ticker, start_date, end_date)
-    adj_close_img_base64 = base64.b64encode(adj_close_img.getvalue()).decode("utf-8")
+    try:
+        adj_close_img = get_adj_close_plot(ticker, start_date, end_date)
+        adj_close_img_base64 = base64.b64encode(adj_close_img.getvalue()).decode(
+            "utf-8"
+        )
 
-    monte_carlo_img = get_monte_carlo_plot(
-        ticker, start_date, end_date, trading_days, iterations
-    )
-    monte_carlo_img_base64 = base64.b64encode(monte_carlo_img.getvalue()).decode(
-        "utf-8"
-    )
+        monte_carlo_img = get_monte_carlo_plot(
+            ticker, start_date, end_date, trading_days, iterations
+        )
+        monte_carlo_img_base64 = base64.b64encode(monte_carlo_img.getvalue()).decode(
+            "utf-8"
+        )
+    except ValueError:
+        return render_template("error.html")
 
     return render_template(
         "monte_carlo.html",
