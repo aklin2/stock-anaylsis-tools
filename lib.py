@@ -11,7 +11,7 @@ matplotlib.use("agg")
 
 
 def get_data(ticker, start_date, end_date):
-    data = yf.download(ticker, start=start_date, end=end_date)
+    data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=False)
     return data
 
 
@@ -28,7 +28,7 @@ def get_current_risk_free_rate():
     yesterday = yesterday.strftime("%Y-%m-%d")
 
     # Attempt to fetch today's data
-    data = yf.download(ticker, start=yesterday, end=today)
+    data = yf.download(ticker, start=yesterday, end=today, auto_adjust=False)
     if data.empty:
         raise ValueError(
             f"Ticker Symbol {ticker} is not valid or date ranges are invalid"
@@ -39,7 +39,7 @@ def get_current_risk_free_rate():
         raise ValueError("Failed to retrieve the 10-year Treasury yield data.")
 
     # Get the latest closing price, which represents the yield
-    current_yield = data["Close"].iloc[-1]
+    current_yield = data["Close"].iloc[-1][ticker]
 
     # Convert the yield to a decimal (from percentage)
     risk_free_rate = current_yield / 100
@@ -92,6 +92,7 @@ def get_monte_carlo_plot(ticker, start_date, end_date, trading_days=5, iteration
     # Compute the logarithmic returns
     log_returns = np.log(1 + data.pct_change())
     std_dev = log_returns.std() * 250**0.5  # There are 250 trading days in a year
+    std_dev = std_dev[ticker]
 
     #
     r = get_current_risk_free_rate()  # annual risk-free interest rate
